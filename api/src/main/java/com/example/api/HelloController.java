@@ -12,11 +12,4 @@ public class HelloController {
     @Autowired
     private GreetingRepository repository;
 
-    @RequestMapping("/hello")
-    public String hello(
-            @RequestParam String lang
-    ) {
-        GreetingEntity entity = this.repository.findFirstByLang(lang);
-        return entity.text;
-    }
-}
+    @RequestMapping("/hel
