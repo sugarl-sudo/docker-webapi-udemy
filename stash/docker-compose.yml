@@ -1,0 +1,30 @@
+version: '3.9'
+services:
+  # API側の定義
+  api:
+    # ビルドコンテキスト
+    build: ./api
+    # 解放するポート
+    ports:
+      - 8080:8080
+    # DB側に依存
+    depends_on:
+      - db
+  # DB側の定義
+  db:
+    # イメージ指定
+    image: postgres:15
+    # 解放するポート
+    ports:
+      - 5432:5432
+    # 
+    environment:
+      - POSTGRES_PASSWORD=mypassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=appdb
+    volumes:
+      - db-storage:/var/lib/postgresql/data
+      - ./db/initdb:/docker-entrypoint-initdb.d
+
+volumes:
+  db-storage:

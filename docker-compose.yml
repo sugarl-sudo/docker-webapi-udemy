@@ -1,22 +1,23 @@
-version: '3.9'
+version: 3.9
 services:
   api:
+    container_name: api
     build: ./api
     ports:
       - 8080:8080
-    depends_on:
-      - db
-  db:
-    image: postgres:15
-    ports:
-      - 5432:5432
-    environment:
-      - POSTGRES_PASSWORD=mypassword
-      - POSTGRES_USER=postgres
-      - POSTGRES_DB=appdb
     volumes:
-      - db-storage:/var/lib/postgresql/data
-      - ./db/initdb:/docker-entrypoint-initdb.d
+      # ホスト側の./apiをコンテナ側の/workspaceにマウント
+      # cachedはマウントのパフォーマンスを向上させるオプション
+      - ./api:/workspace:cached
 
-volumes:
-  db-storage:
+  web:
+    container_name: web
+    build: ./web
+    ports: 
+      - 3000:3000
+    volumes:
+      - ./web:/workspace/:cached
+    # これによりapiサーバが先に起動する
+    depends_on:
+      - api
+
